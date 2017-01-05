@@ -5,6 +5,8 @@ const PORT = process.env.PORT || 3000;
 
 var buzzwordArray = [];
 
+console.log(buzzwordArray);
+
 app.use(bodyParser.urlencoded({extended: false }));
 
 app.get('/', express.static('public'));
@@ -14,19 +16,16 @@ app.get('/buzzwords', function (req, res){
 });
 
 app.post('/buzzword', function (req, res) {
-  var buzzWord = req.body.buzzWord;
-  var points = req.body.points;
-  var tempObject = {"buzzWord": buzzWord, "points": points};
-  buzzwordArray.push(tempObject);
-  res.send(req.body);
-  console.log({"success": true});
+  buzzwordArray.push(req.body);
+  res.send(buzzwordArray);
+  // console.log({"success": true});
 });
 
 app.put('/buzzword', function (req, res) {
   buzzWord = req.body.buzzWord;
   var heard = true;
   res.send(req.body);
-  console.log({"success": true, newScore: Number});
+  // console.log({"success": true, newScore: Number});
 });
 
 var server = app.listen(PORT, () => {
