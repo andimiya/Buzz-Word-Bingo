@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3000;
 
 var buzzwordArray = [];
+var newScore = '';
 
 console.log(buzzwordArray);
 
@@ -17,15 +18,24 @@ app.get('/buzzwords', function (req, res){
 
 app.post('/buzzword', function (req, res) {
   buzzwordArray.push(req.body);
-  res.send(buzzwordArray);
-  // console.log({"success": true});
+  if (res.send(buzzwordArray) ){
+    console.log({"success": true});
+  }
+  else {
+    console.log({"success": false});
+  }
+
 });
 
 app.put('/buzzword', function (req, res) {
-  buzzWord = req.body.buzzWord;
-  var heard = true;
-  res.send(req.body);
-  // console.log({"success": true, newScore: Number});
+  for (var i = 0; i < buzzwordArray.length; i++){
+    if(req.body.buzzWord === buzzwordArray[i].buzzWord){
+      buzzwordArray[i].heard = true;
+      newScore = Number(newScore) + Number(buzzwordArray[i].points);
+      console.log({"success": true, "newScore": newScore});
+    }
+  }
+  res.send(buzzwordArray);
 });
 
 var server = app.listen(PORT, () => {
