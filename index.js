@@ -8,42 +8,39 @@ var newScore = '';
 
 app.use(bodyParser.urlencoded({extended: false }));
 
-app.get('/', express.static('public'));
+app.use('/', express.static('public'));
 
 app.get('/buzzwords', function (req, res){
-  res.send({"buzzwords": buzzwordArray});
+  res.json({"buzzwords": buzzwordArray});
 });
 
 app.post('/buzzword', function (req, res) {
-  if (buzzwordArray.push(req.body)){
-    res.send({"success": true});
+    buzzwordArray.push(req.body);
+    res.json({"success": true});
     console.log(buzzwordArray);
-  }
-  else {
-    res.send({"success": false});
-  }
 });
 
 app.put('/buzzword', function (req, res) {
+  var response = {"success": false};
   for (var i = 0; i < buzzwordArray.length; i++){
     if(req.body.buzzWord === buzzwordArray[i].buzzWord){
       buzzwordArray[i].heard = true;
       newScore = Number(newScore) + Number(buzzwordArray[i].points);
-      res.send({"success": true, "newScore": newScore});
-      return true;
+      response = {"success": true, "newScore": newScore};
     }
   }
-  console.log(buzzwordArray);
+  res.json(response);
 });
 
 app.delete('/buzzword', function (req, res) {
+  var response = {"success": false};
   for (var i = 0; i < buzzwordArray.length; i++){
     if(req.body.buzzWord === buzzwordArray[i].buzzWord){
       buzzwordArray.splice(i, 1);
-      res.send({"success": true});
+      response = {"success": true};
     }
   }
-  console.log(buzzwordArray);
+  res.json(response);
 });
 
 var server = app.listen(PORT, () => {
