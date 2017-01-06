@@ -6,8 +6,6 @@ const PORT = process.env.PORT || 3000;
 var buzzwordArray = [];
 var newScore = '';
 
-console.log(buzzwordArray);
-
 app.use(bodyParser.urlencoded({extended: false }));
 
 app.get('/', express.static('public'));
@@ -17,15 +15,13 @@ app.get('/buzzwords', function (req, res){
 });
 
 app.post('/buzzword', function (req, res) {
-  buzzwordArray.push(req.body);
-  if (res.send(buzzwordArray) ){
-    console.log({"success": true});
-    return;
+  if (buzzwordArray.push(req.body)){
+    res.send({"success": true});
+    console.log(buzzwordArray);
   }
   else {
-    console.log({"success": false});
+    res.send({"success": false});
   }
-
 });
 
 app.put('/buzzword', function (req, res) {
@@ -33,23 +29,21 @@ app.put('/buzzword', function (req, res) {
     if(req.body.buzzWord === buzzwordArray[i].buzzWord){
       buzzwordArray[i].heard = true;
       newScore = Number(newScore) + Number(buzzwordArray[i].points);
-      console.log({"success": true, "newScore": newScore});
-      return;
-    }
-    else {
-      console.log({"success": false});
+      res.send({"success": true, "newScore": newScore});
+      return true;
     }
   }
-  res.send(buzzwordArray);
+  console.log(buzzwordArray);
 });
 
 app.delete('/buzzword', function (req, res) {
   for (var i = 0; i < buzzwordArray.length; i++){
     if(req.body.buzzWord === buzzwordArray[i].buzzWord){
       buzzwordArray.splice(i, 1);
+      res.send({"success": true});
     }
   }
-  console.log({"success": true});
+  console.log(buzzwordArray);
 });
 
 var server = app.listen(PORT, () => {
